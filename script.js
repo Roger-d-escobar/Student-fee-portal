@@ -79,7 +79,7 @@ function confirmDelete() {
       showNotification(data.message);
     })
     .catch(function (err) {
-      showNotification('Data is removed successfully 🚮');
+      showNotification('Data is removed successfully');
     });
 
   clearForm();

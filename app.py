@@ -57,7 +57,7 @@ def delete():
     # Delete record matching roll_no from database
     try:
         supabase.table('students').delete().eq('roll_no', roll_no).execute()
-        return jsonify({'success': True, 'message': 'Data is removed successfully 🚮'})
+        return jsonify({'success': True, 'message': 'Data is removed successfully'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
