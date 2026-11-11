@@ -7,7 +7,7 @@ function showNotification(msg) {
   notification.classList.remove('hidden');
 
   clearTimeout(timer);
-  timer = setTimeout(function() {
+  timer = setTimeout(function () {
     hideNotification();
   }, 3000);
 }
@@ -35,13 +35,13 @@ function saveData(event) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name: name, roll_no: roll_no, fee: fee })
   })
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    showNotification(data.message);
-  })
-  .catch(function(err) {
-    showNotification('Data saved successfully');
-  });
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      showNotification(data.message);
+    })
+    .catch(function (err) {
+      showNotification('Data saved successfully ✓');
+    });
 }
 
 function clearForm() {
@@ -74,13 +74,13 @@ function confirmDelete() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ roll_no: roll_no })
   })
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    showNotification(data.message);
-  })
-  .catch(function(err) {
-    showNotification('Data is removed successfully');
-  });
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      showNotification(data.message);
+    })
+    .catch(function (err) {
+      showNotification('Data is removed successfully 🚮');
+    });
 
   clearForm();
 }
