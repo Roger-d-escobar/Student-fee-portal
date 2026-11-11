@@ -17,3 +17,4 @@ A web application with HTML, CSS, JavaScript, and Python (Flask) for managing st
    ```bash
    python app.py
    ```
+

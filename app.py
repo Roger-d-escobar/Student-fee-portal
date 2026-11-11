@@ -1,8 +1,24 @@
+import os
 from flask import Flask, request, jsonify, send_from_directory
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# Database connection setup (Supabase or Firebase to be added here)
+# Supabase setup
+SUPABASE_URL = os.getenv('SUPABASE_URL', '')
+SUPABASE_KEY = os.getenv('SUPABASE_SECRET_KEY') or os.getenv('SUPABASE_KEY', '')
+
+supabase = None
+if SUPABASE_URL and not SUPABASE_URL.startswith('https://your-project-id'):
+    try:
+        from supabase import create_client
+        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+    except Exception as e:
+        print("Supabase connection error:", e)
+
+# Fallback local storage
 database = {}
 
 @app.after_request
@@ -30,7 +46,18 @@ def save():
     fee = data.get('fee')
 
     # Save to database using roll_no as primary key
-    database[roll_no] = {'name': name, 'roll_no': roll_no, 'fee': fee}
+    if supabase:
+        try:
+            supabase.table('students').upsert({
+                'roll_no': roll_no,
+                'name': name,
+                'fee': fee
+            }).execute()
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)}), 500
+    else:
+        database[roll_no] = {'name': name, 'roll_no': roll_no, 'fee': fee}
+
     return jsonify({'success': True, 'message': 'Data saved successfully'})
 
 @app.route('/api/delete', methods=['POST', 'OPTIONS'])
@@ -41,11 +68,16 @@ def delete():
     roll_no = data.get('roll_no')
 
     # Delete record matching roll_no from database
-    if roll_no in database:
-        del database[roll_no]
+    if supabase:
+        try:
+            supabase.table('students').delete().eq('roll_no', roll_no).execute()
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)}), 500
+    else:
+        if roll_no in database:
+            del database[roll_no]
 
     return jsonify({'success': True, 'message': 'Data is removed successfully'})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-
