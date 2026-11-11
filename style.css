@@ -26,19 +26,14 @@ h2 {
   color: #000000;
 }
 
-.form-group {
-  margin-bottom: 16px;
-}
-
 label {
-  display: block;
-  margin-bottom: 6px;
   color: #333333;
 }
 
 input {
   width: 100%;
   padding: 8px;
+  margin-top: 6px;
   border: 1px solid #333333;
   background-color: #ffffff;
   color: #000000;
@@ -53,13 +48,7 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 24px;
-}
-
-.left-buttons,
-.right-buttons {
-  display: flex;
-  gap: 10px;
+  margin-top: 10px;
 }
 
 button {
@@ -82,13 +71,18 @@ button {
 .btn-delete {
   background-color: #ff0000;
   color: #ffffff;
+  margin-left: 8px;
 }
 
 .notification {
+  position: fixed;
+  top: 24px;
+  right: 24px;
   background-color: #99ff66;
   color: #000000;
-  padding: 10px;
-  margin-bottom: 16px;
+  padding: 12px 20px;
+  border: 1px solid #000000;
+  z-index: 1000;
 }
 
 .modal-overlay {
@@ -117,15 +111,10 @@ button {
   margin-bottom: 20px;
 }
 
-.modal-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-}
-
 .btn-yes {
   background-color: #ff0000;
   color: #ffffff;
+  margin-right: 12px;
 }
 
 .btn-no {
