@@ -1,91 +1,86 @@
-const form = document.getElementById('studentForm');
-const nameInput = document.getElementById('name');
-const rollNoInput = document.getElementById('rollNo');
-const feeInput = document.getElementById('fee');
-const clearBtn = document.getElementById('clearBtn');
-const deleteBtn = document.getElementById('deleteBtn');
-const notification = document.getElementById('notification');
-const modalOverlay = document.getElementById('modalOverlay');
-const confirmYes = document.getElementById('confirmYes');
-const confirmNo = document.getElementById('confirmNo');
-
 const API_URL = 'http://127.0.0.1:5000';
-let notificationTimer;
+var timer;
 
-function showNotification(text) {
-  notification.textContent = text;
+function showNotification(msg) {
+  var notification = document.getElementById('notification');
+  notification.innerHTML = msg;
   notification.classList.remove('hidden');
 
-  clearTimeout(notificationTimer);
-  notificationTimer = setTimeout(() => {
+  clearTimeout(timer);
+  timer = setTimeout(function() {
     hideNotification();
   }, 3000);
 }
 
 function hideNotification() {
-  notification.textContent = '';
+  var notification = document.getElementById('notification');
+  notification.innerHTML = '';
   notification.classList.add('hidden');
 }
 
-// Save record
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const payload = {
-    name: nameInput.value.trim(),
-    roll_no: rollNoInput.value.trim(),
-    fee: feeInput.value.trim()
-  };
+function saveData(event) {
+  if (event) event.preventDefault();
 
-  try {
-    const res = await fetch(`${API_URL}/api/save`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    showNotification(data.message);
-  } catch (err) {
-    showNotification('Data saved successfully');
+  var name = document.getElementById('name').value.trim();
+  var roll_no = document.getElementById('rollNo').value.trim();
+  var fee = document.getElementById('fee').value.trim();
+
+  if (!name || !roll_no || !fee) {
+    showNotification('Please fill all fields');
+    return;
   }
-});
 
-// Clear form
-clearBtn.addEventListener('click', () => {
-  form.reset();
-  clearTimeout(notificationTimer);
+  fetch(API_URL + '/api/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name, roll_no: roll_no, fee: fee })
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    showNotification(data.message);
+  })
+  .catch(function(err) {
+    showNotification('Data saved successfully');
+  });
+}
+
+function clearForm() {
+  document.getElementById('name').value = '';
+  document.getElementById('rollNo').value = '';
+  document.getElementById('fee').value = '';
+  clearTimeout(timer);
   hideNotification();
-});
+}
 
-// Delete trigger
-deleteBtn.addEventListener('click', () => {
-  if (!rollNoInput.value.trim()) {
+function deleteTrigger() {
+  var roll_no = document.getElementById('rollNo').value.trim();
+  if (!roll_no) {
     showNotification('Please enter Roll No. to delete');
     return;
   }
-  modalOverlay.classList.remove('hidden');
-});
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
 
-// Cancel delete
-confirmNo.addEventListener('click', () => {
-  modalOverlay.classList.add('hidden');
-});
+function cancelDelete() {
+  document.getElementById('modalOverlay').classList.add('hidden');
+}
 
-// Confirm delete
-confirmYes.addEventListener('click', async () => {
-  modalOverlay.classList.add('hidden');
-  const rollNo = rollNoInput.value.trim();
+function confirmDelete() {
+  document.getElementById('modalOverlay').classList.add('hidden');
+  var roll_no = document.getElementById('rollNo').value.trim();
 
-  try {
-    const res = await fetch(`${API_URL}/api/delete`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ roll_no: rollNo })
-    });
-    const data = await res.json();
+  fetch(API_URL + '/api/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ roll_no: roll_no })
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
     showNotification(data.message);
-  } catch (err) {
+  })
+  .catch(function(err) {
     showNotification('Data is removed successfully');
-  }
+  });
 
-  form.reset();
-});
+  clearForm();
+}

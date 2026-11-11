@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Student Fee Details</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -11,7 +10,7 @@
 
     <div id="notification" class="notification hidden"></div>
 
-    <form id="studentForm">
+    <form id="studentForm" onsubmit="saveData(event)">
       <div class="form-group">
         <label for="name">Name:</label>
         <input type="text" id="name" required>
@@ -29,11 +28,11 @@
 
       <div class="button-row">
         <div class="left-buttons">
-          <button type="submit" id="saveBtn" class="btn-save">Save</button>
+          <button type="submit" class="btn-save">Save</button>
         </div>
         <div class="right-buttons">
-          <button type="button" id="clearBtn" class="btn-clear">Clear</button>
-          <button type="button" id="deleteBtn" class="btn-delete">Delete</button>
+          <button type="button" class="btn-clear" onclick="clearForm()">Clear</button>
+          <button type="button" class="btn-delete" onclick="deleteTrigger()">Delete</button>
         </div>
       </div>
     </form>
@@ -43,8 +42,8 @@
     <div class="modal-box">
       <p>This will delete all the data of the user from the Database are you sure?</p>
       <div class="modal-buttons">
-        <button type="button" id="confirmYes" class="btn-yes">Yes</button>
-        <button type="button" id="confirmNo" class="btn-no">No</button>
+        <button type="button" class="btn-yes" onclick="confirmDelete()">Yes</button>
+        <button type="button" class="btn-no" onclick="cancelDelete()">No</button>
       </div>
     </div>
   </div>
@@ -52,4 +51,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
